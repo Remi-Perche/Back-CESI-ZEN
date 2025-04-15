@@ -7,7 +7,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\BreathingExerciseController;
 use App\Http\Middleware\RoleMiddleware;
 
-// Routes pour Authentification
+// Routes pour l'Authentification
 Route::prefix('auth')->group(function() {
     Route::post('/register', [UserController::class, 'register']);
     Route::post('/login', [UserController::class, 'login']);
@@ -16,22 +16,36 @@ Route::prefix('auth')->group(function() {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [UserController::class, 'logout']);
 
-    // Routes pour Users
+    // Routes pour les Users
     Route::prefix('users')->group(function() {
-        Route::get('/', [UserController::class, 'index'])->middleware(RoleMiddleware::class.':Administrateur,Super-Administrateur');
+        Route::get('/', [UserController::class, 'index']);
         Route::get('/{id}', [UserController::class, 'show']);
-        Route::post('/', [UserController::class, 'store'])->middleware(RoleMiddleware::class.':Super-Administrateur');
+        Route::post('/', [UserController::class, 'store']);
         Route::put('/{id}', [UserController::class, 'update']);
         Route::delete('/{id}', [UserController::class, 'destroy']);
     });
 
-    // Routes pour Ressource
-    Route::prefix('resources')->group(function() {
-        Route::post('/', [ResourceController::class, 'store']);
-        Route::put('/{id}', [ResourceController::class, 'update']);
-        Route::delete('/{id}', [ResourceController::class, 'destroy']);
+    // Routes pour les Menus
+    Route::prefix('menus')->group(function() {
+        Route::get('/', [MenuController::class, 'index']);
+        Route::post('/', [MenuController::class, 'store']);
+        Route::put('/{id}', [MenuController::class, 'update']);
+        Route::delete('/{id}', [MenuController::class, 'destroy']);
     });
 
-    // Routes pour Statistique
-    Route::get('/statistics', [StatisticController::class, 'index']);
+    // Routes pour les Informations
+    Route::prefix('informations')->group(function() {
+        Route::get('/', [InformationController::class, 'index']);
+        Route::post('/', [InformationController::class, 'store']);
+        Route::put('/{id}', [InformationController::class, 'update']);
+        Route::delete('/{id}', [InformationController::class, 'destroy']);
+    });
+
+    // Routes pour les Exercices de respiration
+    Route::prefix('breathingExercise')->group(function() {
+        Route::get('/', [BreathingExerciseController::class, 'index']);
+        Route::post('/', [BreathingExerciseController::class, 'store']);
+        Route::put('/{id}', [BreathingExerciseController::class, 'update']);
+        Route::delete('/{id}', [BreathingExerciseController::class, 'destroy']);
+    });
 });

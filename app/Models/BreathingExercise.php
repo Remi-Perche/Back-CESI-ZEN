@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreathingExercise extends Model
 {
-    use HasFactory;
 
     protected $table = 'breathingExercise';
 
