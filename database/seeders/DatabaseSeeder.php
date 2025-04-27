@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Menu;
 use App\Models\Information;
 use App\Models\BreathingExercise;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,6 +29,15 @@ class DatabaseSeeder extends Seeder
             'inspirationDuration' => 1,
             'apneaDuration' => 1,
             'expirationDuration' => 1
+        ]);
+
+        User::create([
+            'firstname' => 'a',
+            'lastname' => 'a',
+            'email' => 'a@a.fr',
+            'password' => Hash::make('azerty'),
+            'role' => 'Super-Administrateur',
+            'actif' => true
         ]);
     }
 }

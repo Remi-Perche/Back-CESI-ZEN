@@ -9,6 +9,17 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+    /**
+    * @OA\Get(
+    *     path="/users",
+    *     summary="Lister les utilisateurs",
+    *     tags={"User"},
+    *     security={{"bearerAuth":{}}},
+    *     @OA\Response(response=200, description="Liste des utilisateurs"),
+    *     @OA\Response(response=401, description="Non autorisé")
+    * )
+    */
+
     public function index()
     {
         try {
@@ -19,10 +30,23 @@ class UserController extends Controller
         return $user;
     }
 
+    /**
+    * @OA\Get(
+    *     path="/users/{id}",
+    *     summary="Afficher un utilisateur",
+    *     tags={"User"},
+    *     security={{"bearerAuth":{}}},
+    *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+    *     @OA\Response(response=200, description="Utilisateur trouvé"),
+    *     @OA\Response(response=404, description="Non trouvé"),
+    *     @OA\Response(response=401, description="Non autorisé")
+    * )
+    */
+
     public function show(Request $request, $id)
     {
         if ($request->user()->id != $id && $request->user()->role != "Super-Administrateur") {
-            return response()->json(['code' => 403, 'error' => 'Vous n\'êtes pas autorisés à faire cette modification']);
+            return response()->json(['code' => 401, 'error' => 'Vous n\'êtes pas autorisés à faire cette modification']);
         }
         try {
             $user = User::findOrFail($id);
@@ -31,6 +55,29 @@ class UserController extends Controller
         }
         return $user;
     }
+
+    /**
+    * @OA\Post(
+    *      path="/users",
+    *      tags={"User"},
+    *      summary="Créer un utilisateur",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              required={"firstname","lastname","email","password","role","actif"},
+    *              @OA\Property(property="firstname", type="string"),
+    *              @OA\Property(property="lastname", type="string"),
+    *              @OA\Property(property="email", type="string"),
+    *              @OA\Property(property="password", type="string"),
+    *              @OA\Property(property="role", type="string"),
+    *              @OA\Property(property="actif", type="boolean")
+    *          )
+    *      ),
+    *      @OA\Response(response=201, description="Créé"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
 
     public function store(Request $request)
     {
@@ -51,6 +98,26 @@ class UserController extends Controller
         $request['password'] = Hash::make($request->password);
         return User::create($request->all());
     }
+
+    /**
+    * @OA\Post(
+    *      path="/auth/register",
+    *      tags={"Auth"},
+    *      summary="Créer un compte pour l'utilisateur",
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              required={"firstname","lastname","email","password"},
+    *              @OA\Property(property="firstname", type="string"),
+    *              @OA\Property(property="lastname", type="string"),
+    *              @OA\Property(property="email", type="string"),
+    *              @OA\Property(property="password", type="string")
+    *          )
+    *      ),
+    *      @OA\Response(response=201, description="Créé"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
 
     public function register(Request $request)
     {
@@ -80,6 +147,24 @@ class UserController extends Controller
         return response()->json(['token' => $token, 'user' => $user]);
     }
 
+    /**
+    * @OA\Post(
+    *      path="/auth/login",
+    *      tags={"Auth"},
+    *      summary="Connecte l'utilisateur",
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              required={"email","password"},
+    *              @OA\Property(property="email", type="string"),
+    *              @OA\Property(property="password", type="string")
+    *          )
+    *      ),
+    *      @OA\Response(response=200, description="Connecté"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
+
     public function login(Request $request)
     {
         $request->validate([
@@ -98,6 +183,17 @@ class UserController extends Controller
         return response()->json(['token' => $token, 'user' => $user]);
     }
 
+    /**
+    * @OA\Post(
+    *      path="/auth/logout",
+    *      tags={"Auth"},
+    *      summary="Déconnecte l'utilisateur",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Response(response=200, description="Déconnecté"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
+
     public function logout(Request $request)
     {
         try {
@@ -107,6 +203,29 @@ class UserController extends Controller
         }
         return response()->json(['code' => 200, 'message' => 'Déconnexion réussie']);
     }
+
+    /**
+    * @OA\Put(
+    *      path="/users/{id}",
+    *      tags={"User"},
+    *      summary="Met à jour un utilisateur",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              @OA\Property(property="firstname", type="string"),
+    *              @OA\Property(property="lastname", type="string"),
+    *              @OA\Property(property="email", type="string"),
+    *              @OA\Property(property="password", type="string"),
+    *              @OA\Property(property="role", type="string"),
+    *              @OA\Property(property="actif", type="boolean")
+    *          )
+    *      ),
+    *      @OA\Response(response=200, description="Mis à jour"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
 
     public function update(Request $request, $id)
     {
@@ -148,6 +267,17 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    /**
+    * @OA\Delete(
+    *      path="/users/{id}",
+    *      tags={"User"},
+    *      summary="Supprime un utilisateur",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+    *      @OA\Response(response=200, description="Supprimé"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
 
     public function destroy(Request $request, $id)
     {

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use OpenApi\Annotations as OA;
 
 class AppServiceProvider extends ServiceProvider
 {

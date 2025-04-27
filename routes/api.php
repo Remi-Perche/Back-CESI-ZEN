@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Routes pour les Informations
     Route::prefix('informations')->group(function() {
         Route::get('/', [InformationController::class, 'index']);
+        Route::get('/{id}', [InformationController::class, 'show']);
         Route::post('/', [InformationController::class, 'store']);
         Route::put('/{id}', [InformationController::class, 'update']);
         Route::delete('/{id}', [InformationController::class, 'destroy']);

@@ -20,7 +20,7 @@ class MenuFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'definition' => fake()->sentence(45)
+            'description' => fake()->sentence(45)
         ];
     }
 }
