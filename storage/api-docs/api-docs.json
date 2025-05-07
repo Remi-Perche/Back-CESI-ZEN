@@ -11,6 +11,164 @@
         }
     ],
     "paths": {
+        "/breathingExercises": {
+            "get": {
+                "tags": [
+                    "Breathing Exercices"
+                ],
+                "summary": "Liste toutes les exercices de respiration",
+                "operationId": "7706313222c8dca3278636523b1f23ee",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Breathing Exercices"
+                ],
+                "summary": "Créer un exercice de respiration",
+                "operationId": "b25f14ae9c143f6fc48fb1e31c54ddbb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "inspirationDuration",
+                                    "apneaDuration",
+                                    "expirationDuration"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "inspirationDuration": {
+                                        "type": "integer"
+                                    },
+                                    "apneaDuration": {
+                                        "type": "integer"
+                                    },
+                                    "expirationDuration": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Créé"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/breathingExercises/{id}": {
+            "put": {
+                "tags": [
+                    "Breathing Exercices"
+                ],
+                "summary": "Met à jour un exercice de respiration",
+                "operationId": "eadf1a14eba9f0d060c7e2779330a0ea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "inspirationDuration": {
+                                        "type": "integer"
+                                    },
+                                    "apneaDuration": {
+                                        "type": "integer"
+                                    },
+                                    "expirationDuration": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mis à jour"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Breathing Exercices"
+                ],
+                "summary": "Supprime un exercice de respiration",
+                "operationId": "f3fb34d78a0a150d60f60a9b10847933",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Supprimé"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/informations": {
             "get": {
                 "tags": [
@@ -360,6 +518,56 @@
                     }
                 ]
             },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Met à jour l'utilisateur connecté",
+                "operationId": "d7669ea07475e278fdb258ff2fc5d5af",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "firstname": {
+                                        "type": "string"
+                                    },
+                                    "lastname": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "role": {
+                                        "type": "string"
+                                    },
+                                    "actif": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mis à jour"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "User"
@@ -407,6 +615,36 @@
                 "responses": {
                     "201": {
                         "description": "Créé"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Supprime l'utilisateur connecté",
+                "operationId": "62a1a0e0d3ade71814c480b07315d787",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Supprimé"
                     },
                     "400": {
                         "description": "Bad request"
@@ -544,6 +782,31 @@
                 ]
             }
         },
+        "/auth/user": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Afficher les informations de l'utilisateur connecté",
+                "operationId": "4e716605a93adb5ba01e99836cdf9659",
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur trouvé"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/auth/register": {
             "post": {
                 "tags": [
@@ -665,6 +928,10 @@
     },
     "tags": [
         {
+            "name": "Auth",
+            "description": "Gestion de l'authentification"
+        },
+        {
             "name": "User",
             "description": "Gestion des utilisateurs"
         },
@@ -677,8 +944,8 @@
             "description": "Gestion des menus"
         },
         {
-            "name": "Auth",
-            "description": "Gestion de l'authentification"
+            "name": "Breathing Exercices",
+            "description": "Gestion des exercices de respiration"
         }
     ]
 }

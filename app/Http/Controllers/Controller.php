@@ -25,6 +25,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
  * 
  *
  * @OA\Tag(
+ *     name="Auth",
+ *     description="Gestion de l'authentification"
+ * )
+ * @OA\Tag(
  *     name="User",
  *     description="Gestion des utilisateurs"
  * )
@@ -37,8 +41,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
  *     description="Gestion des menus"
  * )
  * @OA\Tag(
- *     name="Auth",
- *     description="Gestion de l'authentification"
+ *     name="Breathing Exercices",
+ *     description="Gestion des exercices de respiration"
  * )
  *
  */

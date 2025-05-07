@@ -7,16 +7,46 @@ use App\Models\BreathingExercise;
 
 class BreathingExerciseController extends Controller
 {
+    /**
+    * @OA\Get(
+    *      path="/breathingExercises",
+    *      tags={"Breathing Exercices"},
+    *      summary="Liste toutes les exercices de respiration",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Response(response=200, description="OK"),
+    *      @OA\Response(response=404, description="Not found")
+    * )
+    */
     public function index()
     {
         try {
-            $breathingExercises = BreathingExercise::with(['resource', 'user'])->get();
+            $breathingExercises = BreathingExercise::all();
         } catch (\Exception $e) {
             return response()->json(['code' => 404, 'error' => $e->getMessage()], 404);
         }
         return $breathingExercises;
     }
 
+    /**
+    * @OA\Post(
+    *      path="/breathingExercises",
+    *      tags={"Breathing Exercices"},
+    *      summary="Créer un exercice de respiration",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              required={"title","inspirationDuration","apneaDuration","expirationDuration"},
+    *              @OA\Property(property="title", type="string"),
+    *              @OA\Property(property="inspirationDuration", type="integer"),
+    *              @OA\Property(property="apneaDuration", type="integer"),
+    *              @OA\Property(property="expirationDuration", type="integer")
+    *          )
+    *      ),
+    *      @OA\Response(response=201, description="Créé"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
     public function store(Request $request)
     {
         try {
@@ -32,6 +62,26 @@ class BreathingExerciseController extends Controller
         return BreathingExercise::create($request->all());
     }
 
+    /**
+    * @OA\Put(
+    *      path="/breathingExercises/{id}",
+    *      tags={"Breathing Exercices"},
+    *      summary="Met à jour un exercice de respiration",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              @OA\Property(property="title", type="string"),
+    *              @OA\Property(property="inspirationDuration", type="integer"),
+    *              @OA\Property(property="apneaDuration", type="integer"),
+    *              @OA\Property(property="expirationDuration", type="integer")
+    *          )
+    *      ),
+    *      @OA\Response(response=200, description="Mis à jour"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
     public function update(Request $request, $id)
     {
         try {
@@ -53,6 +103,17 @@ class BreathingExerciseController extends Controller
         return $breathingExercise;
     }
 
+    /**
+    * @OA\Delete(
+    *      path="/breathingExercises/{id}",
+    *      tags={"Breathing Exercices"},
+    *      summary="Supprime un exercice de respiration",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+    *      @OA\Response(response=200, description="Supprimé"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
     public function destroy($id)
     {
         try {

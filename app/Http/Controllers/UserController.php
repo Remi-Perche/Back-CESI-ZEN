@@ -57,6 +57,28 @@ class UserController extends Controller
     }
 
     /**
+    * @OA\Get(
+    *     path="/auth/user",
+    *     summary="Afficher les informations de l'utilisateur connecté",
+    *     tags={"Auth"},
+    *     security={{"bearerAuth":{}}},
+    *     @OA\Response(response=200, description="Utilisateur trouvé"),
+    *     @OA\Response(response=404, description="Non trouvé"),
+    *     @OA\Response(response=401, description="Non autorisé")
+    * )
+    */
+
+    public function showMe(Request $request)
+    {
+        try {
+            $user = User::findOrFail($request->user()->id);
+        } catch (\Exception $e) {
+            return response()->json(['code' => 404, 'error' => $e->getMessage()], 404);
+        }
+        return $user;
+    }
+
+    /**
     * @OA\Post(
     *      path="/users",
     *      tags={"User"},
@@ -268,6 +290,34 @@ class UserController extends Controller
     }
 
     /**
+    * @OA\Put(
+    *      path="/users",
+    *      tags={"User"},
+    *      summary="Met à jour l'utilisateur connecté",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\RequestBody(
+    *          required=true,
+    *          @OA\JsonContent(
+    *              @OA\Property(property="firstname", type="string"),
+    *              @OA\Property(property="lastname", type="string"),
+    *              @OA\Property(property="email", type="string"),
+    *              @OA\Property(property="password", type="string"),
+    *              @OA\Property(property="role", type="string"),
+    *              @OA\Property(property="actif", type="boolean")
+    *          )
+    *      ),
+    *      @OA\Response(response=200, description="Mis à jour"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
+
+    public function updateMe(Request $request) 
+    {
+        UserController::update($request, $request->user()->id);
+    }
+
+
+    /**
     * @OA\Delete(
     *      path="/users/{id}",
     *      tags={"User"},
@@ -291,5 +341,22 @@ class UserController extends Controller
         }
         User::destroy($id);
         return response()->json(['code' => 200, 'message' => 'Utilisateur supprimé avec succès'], 200);
+    }
+
+    /**
+    * @OA\Delete(
+    *      path="/users",
+    *      tags={"User"},
+    *      summary="Supprime l'utilisateur connecté",
+    *      security={{ "bearerAuth":{} }},
+    *      @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+    *      @OA\Response(response=200, description="Supprimé"),
+    *      @OA\Response(response=400, description="Bad request")
+    * )
+    */
+
+    public function destroyMe(Request $request)
+    {
+        UserController::destroy($request, $request->user()->id);
     }
 }
