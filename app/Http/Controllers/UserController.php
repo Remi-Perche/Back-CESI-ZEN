@@ -252,7 +252,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         if ($request->user()->id != $id && $request->user()->role != "Super-Administrateur") {
-            return response()->json(['code' => 403, 'error' => 'Vous n\'êtes pas autorisés à faire cette modification']);
+            return response()->json(['code' => 403, 'error' => 'Vous n\'êtes pas autorisés à faire cette modification'], 403);
         }
         try {
             $request->validate([
@@ -332,7 +332,7 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
         if ($request->user()->id != $id && $request->user()->role != "Super-Administrateur") {
-            return response()->json(['code' => 403, 'error' => 'Vous n\'êtes pas autorisés à faire cette suppression']);
+            return response()->json(['code' => 403, 'error' => 'Vous n\'êtes pas autorisés à faire cette suppression'],403);
         }
         try {
             $user = User::findOrFail($id);
