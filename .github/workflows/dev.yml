@@ -27,6 +27,13 @@ jobs:
           ini-values: post_max_size=256M, upload_max_filesize=256M
       - name: Création du fichier .env
         run: cp .env.example .env
+      - name: Installation de Composer
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          sudo mv composer.phar
+          sudo chmod +x /usr/local/bin/composer
+      - name: Installation des dépendances PHP
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
       - name: Génération de la clé d'application
         run: php artisan key:generate
       - name: Exécution des migrations de la base de données
