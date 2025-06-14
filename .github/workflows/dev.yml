@@ -1,4 +1,4 @@
-name: Tests après un push sur la branche develop
+name: Tests Laravel avec SQLite
 
 on:
   push:
@@ -10,39 +10,38 @@ on:
 
 jobs:
   test:
-    name: Test the project
+    name: Run Laravel tests with SQLite
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      - name: Installation de PHP
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, sqlite3, bcmath, ctype, fileinfo, json, openssl, tokenizer, zip
-          ini-values: post_max_size=256M, upload_max_filesize=256M
-      - name: Création du fichier .env
-        run: cp .env.example .env
-      - name: Installation de Composer
-        run: |
-          curl -sS https://getcomposer.org/installer | php
-          sudo mv composer.phar
-          sudo chmod +x /usr/local/bin/composer
-      - name: Installation des dépendances PHP
+          extensions: mbstring, xml, sqlite3, pdo_sqlite, bcmath, ctype, fileinfo, json, openssl, tokenizer, zip
+          coverage: none
+
+      - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
-      - name: Génération de la clé d'application
+
+      - name: Create .env file
+        run: cp .env.example .env
+
+      - name: Configure SQLite database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=$(pwd)/database/database.sqlite" >> .env
+
+      - name: Generate application key
         run: php artisan key:generate
-      - name: Exécution des migrations de la base de données
-        run: php artisan migrate
-      - name: Remplissage de la base de données
-        run: php artisan db:seed
-      - name: Installation des dépendances npm
-        run: npm install
-      - name: Construction des assets
-        run: npm run build
-      - name: Lancement des tests
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Run tests
         run: php artisan test
