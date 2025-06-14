@@ -1,4 +1,4 @@
-name: Test after a push on develop
+name: Tests après un push sur la branche develop
 
 on:
   push:
@@ -15,5 +15,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Installation de PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, sqlite3, bcmath, ctype, fileinfo, json, openssl, tokenizer, zip
+          ini-values: post_max_size=256M, upload_max_filesize=256M
+      - name: Création du fichier .env
+        run: cp .env.example .env
+      - name: Génération de la clé d'application
+        run: php artisan key:generate
+      - name: Exécution des migrations de la base de données
+        run: php artisan migrate
+      - name: Remplissage de la base de données
+        run: php artisan db:seed
+      - name: Installation des dépendances npm
+        run: npm install
+      - name: Construction des assets
+        run: npm run build
       - name: Lancement des tests
         run: php artisan test

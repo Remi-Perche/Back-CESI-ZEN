@@ -33,6 +33,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             cd back-cesi-zen/
             git pull
+            npm install
             php artisan migrate
             php artisan serv --host=0.0.0.0
           EOF
