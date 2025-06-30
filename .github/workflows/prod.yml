@@ -12,10 +12,38 @@ jobs:
   test:
     name: Test the project
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Lancement des tests
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, sqlite3, pdo_sqlite, bcmath, ctype, fileinfo, json, openssl, tokenizer, zip
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Create .env file
+        run: cp .env.example .env
+
+      - name: Configure SQLite database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=$(pwd)/database/database.sqlite" >> .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run migrations
+        run: php artisan migrate
+
+      - name: Run tests
         run: php artisan test
   deploy:
     name: Deploy to EC2
@@ -28,10 +56,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa.pem
       - name: Ajout de l'instance dans les hôtes connus
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      - name: Connection SSH avec pull et run de l'image docker
+      - name: Connection SSH avec pull et run du projet
         run: |
           ssh -i ~/.ssh/id_rsa.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
-            cd back-cesi-zen/
+            cd Back-CESI-ZEN/
             git pull
             composer install
             npm install
