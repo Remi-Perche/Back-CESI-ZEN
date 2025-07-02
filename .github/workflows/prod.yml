@@ -61,21 +61,20 @@ jobs:
           ssh -i ~/.ssh/id_rsa.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd Back-CESI-ZEN/
 
+            echo "Autoriser le répertoire git..."
+            git config --global --add safe.directory /home/ubuntu/Back-CESI-ZEN
+
             echo "Git pull..."
             git pull
 
             echo "Composer install..."
             composer install
 
-            echo "NPM install et build..."
-            npm install
-            npm run build
-
             echo "Migrations..."
             php artisan migrate --force
 
             echo "Permissions storage et cache..."
-            chmod -R 777 storage bootstrap/cache
+            sudo chmod -R 777 storage bootstrap/cache
 
             echo "Reload PHP-FPM..."
             sudo systemctl reload php8.3-fpm
