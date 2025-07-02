@@ -56,13 +56,30 @@ jobs:
           chmod 600 ~/.ssh/id_rsa.pem
       - name: Ajout de l'instance dans les hôtes connus
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      - name: Connection SSH avec pull et run du projet
+      - name: Connexion SSH, pull et mise à jour du projet
         run: |
-          ssh -i ~/.ssh/id_rsa.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
-            cd Back-CESI-ZEN/
+          ssh -i ~/.ssh/id_rsa.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+            cd /home/ubuntu/Back-CESI-ZEN
+
+            echo "Git pull..."
             git pull
-            composer install
+
+            echo "Composer install..."
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "NPM install et build..."
             npm install
-            php artisan migrate
-            php artisan serv --host=0.0.0.0
+            npm run build
+
+            echo "Migrations..."
+            php artisan migrate --force
+
+            echo "Permissions storage et cache..."
+            chmod -R 777 storage bootstrap/cache
+
+            echo "Reload PHP-FPM..."
+            sudo systemctl reload php8.3-fpm
+
+            echo "Déploiement terminé."
           EOF
