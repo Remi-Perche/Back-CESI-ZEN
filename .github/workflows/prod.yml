@@ -59,7 +59,7 @@ jobs:
       - name: Connexion SSH, pull et mise à jour du projet
         run: |
           ssh -i ~/.ssh/id_rsa.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /Back-CESI-ZEN
+            cd Back-CESI-ZEN/
 
             echo "Git pull..."
             git pull
