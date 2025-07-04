@@ -11,6 +11,8 @@ CESIZen est une plateforme de gestion du bien-être mental permettant aux utilis
 Ce projet est développé avec **Laravel**, déployé sur **AWS EC2**, et utilise **nginx + PHP-FPM**.
 
 ---
+COMMENTAIRE
+---
 
 ## ⚙️ Technologies
 
@@ -72,7 +74,7 @@ php artisan migrate
 
 ---
 
-## Lancer le serveur en développement
+## 🖥️ Lancer le serveur en développement
 
 `
 php artisan serv
@@ -81,7 +83,7 @@ En production l'application est servie par nginx.
 
 ---
 
-## Authentification
+## 🔒 Authentification
 L'authentification utilise Laravel Sanctum
 Pour obtenir un token :
 1. `POST /api/auth/login` avec email/password
@@ -90,17 +92,17 @@ Pour obtenir un token :
 
 ---
 
-## API
+## 📂 API
 Une collection Postman pour accéder à toutes les routes de l'API est disponible sur demande.
 
 ---
 
-## Déploiment
+## 🌍 Déploiment
 Le projet est déployé automatiquement via **GitHub Actions** sur un serveur AWS EC2.
 
 ---
 
-## Sécurité
+## 🛡️ Sécurité
 * Authentification Sanctum
 * Rôles et permissions
 * Chiffrement des mots de passe
@@ -108,6 +110,6 @@ Le projet est déployé automatiquement via **GitHub Actions** sur un serveur AW
 
 ---
 
-## Auteur
+## 👨‍💻 Auteur
 
 Rémi PERCHE
